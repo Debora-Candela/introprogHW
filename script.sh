@@ -4,52 +4,82 @@ set -e
 
 # Hi! Please do not modify the above lines.
 # 
-# remember that lines starting with a # are *comments*
-#
-# Here is a list of tasks for you.
+echo "welcome to this homework script!"
+echo "================================"
+echo ""
+echo "You should run this until you see:"
+echo "correct! :-)"
+echo ""
+echo "as the final output in your terminal."
+echo ""
+echo "How do you run a script? Just do ./script.sh on your command line!"
+echo ""
+echo "START HOMEWORK SCRIPT"
+echo "---------------------"
+echo ""
+
 
 # 0. Tell me who worked on this together
 echo "student 1"   # please fill in names here
 echo "student 2"
 
-# 1. Go to your home directory: 
-# (enter your command below)
+# here is a list of tasks for you.
+# whenever a line says "don't touch" then you are not supposed to touch what comes below.
+# all lines where you need to take action are numbered.
+
+# 1. Go to your home directory:
 
 
-# 2. from your home, creating a directory structure: new folder `scpoprogramming`, and inside that folder create folder `hw1`
-# (enter your command below)
+# 2. from your home, creating a directory structure: new folder `programming-hw`, and inside that folder create folder `hw1`
 
+# 3. go into that new directory, i.e. into ~/programming-hw/hw1
 
-# 3. go into that new directory, i.e. into ~/scpoprogramming/hw1
-# (enter your command below)
+# checking the folder exists now
+# don't touch
+[ -d ~/programming-hw/hw1 ] && echo "directory created successfully" || exit 1
 
-
-# 4. download with wget if file does not exist yet
-# if wget does not work for you, manually download from the below URL and place into `~/scpoprogramming/hw1` as `movies.dat`
-# (don't touch the following!)
-if [ ! -f  ~/scpoprogramming/hw1/movies.dat ]; then
+# download with wget if file does not exist yet
+# if wget does not work for you, manually download from the below URL and place into `~/programming-hw/hw1` as `movies.dat`
+# first let me check whether you have wget installed and install it otherwise for you:
+# don't touch
+command -v wget || { [[ "$OSTYPE" == "darwin"* ]] && brew install wget || sudo apt-get install -y wget; }
+echo ""
+# don't touch
+if [ ! -f  movies.dat ]; then
+    echo "File not found!"
+    echo "will download now to current directory now\n"
     echo ""
-    echo "File not found in ~/scpoprogramming/hw1 !"
-    echo "will download now to *current* directory now\n"
-    echo ""
-    wget https://raw.githubusercontent.com/sidooms/MovieTweetings/44c525d0c766944910686c60697203cda39305d6/snapshots/10K/movies.dat -O ./movies.dat
+    wget https://raw.githubusercontent.com/sidooms/MovieTweetings/44c525d0c766944910686c60697203cda39305d6/snapshots/10K/movies.dat -O./movies.dat
 fi
 
 # check file exists now
-# (don't touch)
+# don't touch
 if [ ! -f  movies.dat ]; then
     echo "File not found! Error."
     exit 1
 fi
 
-# 5. look at first 4 rows of downloaded data in `movies.dat`
-# (enter your command below)
+# 4. look at first 4 rows of downloaded data in `movies.dat`. look at this output and try to understand how it is structured. the file ending is `dat`. however, how could you also denominate such a file?
 
+
+# 5. look at first 4 rows of downloaded data in `movies.dat` redirect to a file called `first4.txt`
+
+
+# don't touch
+if [ ! -f  first4.txt ]; then
+    echo "File first4.txt not found! Error."
+    exit 1
+fi
+# check whether file is correct:
+res=$(awk -F '::' '{print $1}' first4.txt )
+echo ""
+[ "$res" = "$(printf '0002844\n0007264\n0008133\n0012349')" ] && echo "first4.txt correct" || exit 1
+echo ""
 
 # actual analysis task: A pipeline
 # we want to know how many genres each movie is classified into
 # `genre1|genre2` means it's in genre1 and genre2: we would count `2` for such an entry
-# the end product of our pipeline is a contingency table, like in class, informing us
+# the end product of our pipeline is a contingency table, informing us
 # about how many movies are part of how many genres. it would look similar to
 #  2 0
 #  5 1
@@ -58,36 +88,35 @@ fi
  
 # I want you to construct a pipeline. let's build it up from the start
 
-# 1. use the `awk` command to separt each row at the `::` delimters
+# 6. use the `awk` command to separt each row at the `::` delimters
 # fill in for _filename_ the correct file you want to operate on. 
 # then remove the # character from the start of the line and look at the result
 
 # awk -F '::' '{print $3}' _filename_
 
-# 2. observe that the `{print $3}` part prints the third field. 
-# that looks like: genre1|genre2
-# that is, there is *another* separator in this column, `|`. 
-# Let's separate again. copy your command from above and 
-# add a pipe as follows: here, the second statement will split at `|` and print into *how many parts* it has split.
+# 7. observe that the `{print $3}` part prints the third field. that looks like: genre1|genre2
+# that is, there is *another* separator in this column, `|`. Let's separate again. copy your command from above and 
+# add a pipe as follows. here, the second statement will split at `|` and print into *how many parts* it has split.
 # i.e. it will tell us *how many genres* that movie belonged to. No need to understand the `awk` part.
 # again, remove the # below, fill in for _filename_ and run
 
 # awk -F '::' '{print $3}' _filename_ | awk '{print split($0, a, "\\|")}'
 
 
-# 3. finish the pipeline by adding 2 commands, exactly like in class, that will produce a contingency table
+# 8. finish the pipeline by adding 2 commands, exactly like in class, that will produce a contingency table
 # we want to know how many movies belong to 0,1,2,... etc genres. 
 
 # awk -F '::' '{print $3}' _filename_ | awk '{print split($0, a, "\\|")}' | sort | uniq -c
 
-# 4. redirect (>) the output of your pipeline to a file `outtable.txt` in the current directory
-# (enter your command below: just copy from 3. above and add the redirect)
+# 9. redirect (>) the output of your pipeline to a file `outtable.txt` in the current directory
 
-# 5. print your table to screen
-echo ""   # don't touch
-echo "here is my table:"   # don't touch
 
-# (enter your command below)
+# dont touch
+echo ""   # leave this untouched
+echo "here is my table:"   # this as well
+
+# 10. Print your table to screen
+
 
 
 #### End of your tasks
@@ -95,12 +124,13 @@ echo "here is my table:"   # don't touch
 echo ""
 echo ""
 echo "checking results...."
-res=$(tail -n 1 outtable.txt | awk -F' ' '{print $1}')
+res=$(tail -n 1 outtable.txt | awk -F ' ' '{print $1}')
 if [ ${res} == 5 ] 
 then
     echo "correct! :-)"
     exit 0
 else
+    echo ""
     echo "wrong result :-("
     exit 1
 fi
